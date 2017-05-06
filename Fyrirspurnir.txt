@@ -1,0 +1,130 @@
+﻿Lokaverkefni - GSÖ
+HLuti B
+
+a.
+SELECT di.nafn AS "Nafn disks", la.nafn AS "Nafn lags"
+FROM diskur di, lag la, flytjandi fl
+WHERE di.Id = fl.Id AND fl.Id = la.Id
+
+b.
+SELECT fl.nafn AS "Nafn flytjanda", la.nafn "Nafn lags"
+FROM flytjandi fl, lag la
+WHERE fl.Id = la.Id
+
+c.
+SELECT la.nafn AS "Nafn lags", te.nafn AS "Tegund"
+FROM lag la, flytjandi fl, diskur di, tegund te
+WHERE la.Id = fl.Id AND fl.Id = di.Id AND di.Tegund_disk = te.Id
+
+d.
+SELECT nafn AS "Nafn lags", lengd AS "Lengd lags"
+FROM lag
+WHERE lengd >= "05%"
+
+e.
+SELECT nafn AS "Nafn disks", utgafuar AS "Útgáfuár"
+FROM diskur
+WHERE utgafuar >= 2010
+
+f.
+SELECT fl.nafn AS "Nafn flytjanda", di.nafn AS "Nafn disks", ut.nafn AS "Útgáfufyrirtæki", di.utgafuar AS "Útgáfuár"
+FROM diskur di, flytjandi fl, utgefandi ut
+WHERE fl.Id = di.Id AND di.Id = ut.Id
+LIMIT 2
+
+g.
+SELECT la.nafn AS "Nafn lags", fl.nafn AS "Nafn flytjanda", ut.nafn AS "Nafn útgefanda", la.lengd AS "Lengd lags"
+FROM flytjandi fl, diskur di, lag la, utgefandi ut
+WHERE la.Id = fl.Id AND fl.Id = di.Id AND di.Id = ut.Id
+ORDER BY la.lengd DESC 
+LIMIT 5
+
+h.
+SELECT te.nafn AS "Tegund", COUNT( di.tegund_disk ) AS "Fjöldi"
+FROM tegund te, diskur di
+WHERE te.Id = di.Tegund_disk
+GROUP BY di.Tegund_disk
+ORDER BY COUNT( di.tegund_disk ) DESC 
+LIMIT 2
+
+i.
+SELECT ut.nafn AS  "Nafn útgefanda", COUNT( di.utgefandi_id ) AS "Fjöldi"
+FROM utgefandi ut, diskur di
+WHERE ut.Id = di.Utgefandi_id
+GROUP BY ut.nafn
+ORDER BY COUNT( di.utgefandi_id ) ASC 
+LIMIT 1
+
+j.
+SELECT di.nafn AS "Nafn disks", ut.nafn AS "Nafn útgefanda", te.nafn AS "Tegund disks", di.utgafuar AS "Útgáfuár"
+FROM diskur di, utgefandi ut, tegund te
+WHERE di.Utgefandi_id = ut.Id AND di.Tegund_disk = te.Id AND Utgafuar BETWEEN 1998 AND 2017 
+ORDER BY ut.nafn
+
+k.
+
+l.
+SELECT nafn AS "Nafn flytjanda", 2017 - faedingardagur AS "Fædingardagur"
+FROM flytjandi
+
+m.
+
+
+n.
+SELECT fl.nafn AS "Nafn flytjanda", COUNT( fl.nafn ) AS "Fjöldi lög"
+FROM flytjandi fl, lag la
+WHERE fl.Id = la.Id
+GROUP BY fl.nafn
+HAVING COUNT( fl.nafn ) > 4
+
+o.
+
+
+
+
+
+
+
+
+
+
+--Fyrirspurnir okkar--
+
+1.
+SELECT ut.nafn AS "Útgefandi", la.nafn AS "Nafn lags"
+FROM utgefandi ut, diskur di, flytjandi fl, lag la
+WHERE ut.Id = di.Id AND di.Id = fl.Id AND fl.Id = la.Id
+ORDER BY ut.nafn
+
+2.
+SELECT fl.nafn AS "Nafn flytjanda", flo.nafn AS "Flokkur"
+FROM flytjandi fl, flokkur flo
+WHERE fl.FlokkurID = flo.Id
+
+3.
+SELECT di.nafn AS "Diskur", te.nafn AS "Tegund disks"
+FROM diskur di, tegund te
+WHERE te.Id = di.tegund_disk
+
+4.
+SELECT di.nafn AS "Nafn disks", ut.nafn AS "Útgefandi"
+FROM utgefandi ut, diskur di
+WHERE ut.Id = di.utgefandi_id
+
+5.
+SELECT di.nafn AS "Diskur", la.nafn AS "Lag"
+FROM diskur di, flytjandi fl, lag la
+WHERE di.Id = fl.Id AND fl.Id = la.Id
+ORDER BY di.nafn
+
+6.
+SELECT fl.nafn AS "Nafn flytjanda", la.nafn AS "Lög"
+FROM flytjandi fl, lag la
+WHERE fl.Id = la.Id
+ORDER BY fl.nafn
+
+7.
+SELECT fl.nafn AS  "Flytjandi", di.nafn AS  "Diskur", ut.nafn AS  "Útgefandi"
+FROM flytjandi fl, diskur di, utgefandi ut
+WHERE fl.Id = di.Id
+AND di.utgefandi_id = ut.Id
